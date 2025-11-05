@@ -18,7 +18,7 @@ export function ChatInterface() {
   const [isFocused, setIsFocused] = useState(false)
   const [input, setInput] = useState("")
   const [messages, setMessages] = useState<Message[]>([])
-  const [selectedModel, setSelectedModel] = useState("gpt-4")
+  const [selectedModel, setSelectedModel] = useState("gemini-2.5-pro")
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -330,9 +330,6 @@ export function ChatInterface() {
                     <SelectContent className="bg-zinc-900 z-30 border-[#3D3D3D] rounded-xl z-30">
                       <SelectItem value="gemini-2.5-pro" className="text-white hover:bg-zinc-700 rounded-lg">
                         Gemini 2.0 Flash
-                      </SelectItem>
-                      <SelectItem value="gpt-4" className="text-white hover:bg-zinc-700 rounded-lg">
-                        GPT-4
                       </SelectItem>
                       <SelectItem value="claude-3" className="text-white hover:bg-zinc-700 rounded-lg">
                         Claude 3
