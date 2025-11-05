@@ -12,9 +12,9 @@ const doto = Doto({
 })
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
-  generator: "v0.app",
+  title: "Sourced AI Chat",
+  description: "Deployed with Netlify",
+  generator: "Sourced AI Chat",
 }
 
 export default function RootLayout({
