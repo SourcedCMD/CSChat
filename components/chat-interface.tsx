@@ -42,7 +42,8 @@ export function ChatInterface() {
     }
 
     const currentInput = input.trim()
-    setMessages((prev) => [...prev, userMessage])
+    const updatedMessages = [...messages, userMessage]
+    setMessages(updatedMessages)
     setInput("")
     setIsLoading(true)
 
@@ -52,22 +53,41 @@ export function ChatInterface() {
     }
 
     try {
-      // Simulate AI response (replace this with actual API call)
-      // For now, this creates a mock response to demonstrate the chat works
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
+      // Prepare messages for API (only content and role)
+      const apiMessages = updatedMessages.map((msg) => ({
+        role: msg.role,
+        content: msg.content,
+      }))
+
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: apiMessages,
+          model: selectedModel,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to get response from API')
+      }
+
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: `I received your message: "${currentInput}".\n\nThis is a placeholder response demonstrating that the chat interface is working. Your message was successfully sent and displayed.\n\nTo enable real AI functionality, you'll need to integrate with an AI API (like OpenAI GPT-4, Anthropic Claude, or Google Gemini).`,
+        content: data.message,
         role: "assistant",
         timestamp: new Date(),
       }
       setMessages((prev) => [...prev, assistantMessage])
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error sending message:", error)
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: "Sorry, there was an error processing your message. Please try again.",
+        content: error.message || "Sorry, there was an error processing your message. Please make sure your OpenAI API key is configured correctly.",
         role: "assistant",
         timestamp: new Date(),
       }
@@ -309,7 +329,7 @@ export function ChatInterface() {
                     </SelectTrigger>
                     <SelectContent className="bg-zinc-900 z-30 border-[#3D3D3D] rounded-xl z-30">
                       <SelectItem value="gemini-2.5-pro" className="text-white hover:bg-zinc-700 rounded-lg">
-                        Gemini 2.5 Pro
+                        Gemini 2.0 Flash
                       </SelectItem>
                       <SelectItem value="gpt-4" className="text-white hover:bg-zinc-700 rounded-lg">
                         GPT-4
